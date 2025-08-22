@@ -1,0 +1,667 @@
+2025-08-20 12:17:18,629 - GHGERC_BUS_PROJECT - INFO - ===== 🚌 Bus CO2 Reduction Calculation Pipeline Start =====
+2025-08-20 12:17:22,515 - GHGERC_BUS_PROJECT - INFO - ============================================================
+2025-08-20 12:17:22,516 - GHGERC_BUS_PROJECT - INFO - 🚀 Executing: 01_insert_monthly_data.py
+2025-08-20 12:17:22,517 - GHGERC_BUS_PROJECT - INFO - ============================================================
+2025-08-20 12:17:25,585 - GHGERC_BUS_PROJECT - INFO - --- Output from 01_insert_monthly_data.py ---
+--- [파일 1] 월별 운행 기록 데이터 생성 및 DB 적재 시작 ---
+✅ 가상 데이터 생성 및 정제를 완료했습니다.
+✅ 생성된 데이터를 엑셀 파일로 저장했습니다: generated_data\generated_bus_data_20250820_121724.xlsx
+⏳ 데이터베이스에 연결을 시도합니다...
+✅ 데이터베이스 연결에 성공했습니다!
+⏳ 'bus_vehicle_master' 테이블에 차량 마스터 데이터를 저장/업데이트합니다...
+✅ 19개의 차량 마스터 레코드가 성공적으로 저장/업데이트되었습니다.
+⏳ 'bus_driving_records' 테이블에 월별 데이터를 적재합니다...
+❌ 월별 운행 기록 데이터 적재 오류: column "charging_amount_kwh" of relation "temp_table" does not exist
+
+
+✅ 데이터베이스 연결을 닫았습니다.
+2025-08-20 12:17:25,586 - GHGERC_BUS_PROJECT - INFO - ✅ Success: '01_insert_monthly_data.py' finished successfully.
+2025-08-20 12:17:25,586 - GHGERC_BUS_PROJECT - INFO - ============================================================
+2025-08-20 12:17:25,586 - GHGERC_BUS_PROJECT - INFO - 🚀 Executing: 02_calculate_baseline.py
+2025-08-20 12:17:25,586 - GHGERC_BUS_PROJECT - INFO - ============================================================
+2025-08-20 12:17:26,415 - GHGERC_BUS_PROJECT - INFO - --- Output from 02_calculate_baseline.py ---
+--- [파일 2] 베이스라인 인자 계산 및 DB 적재 시작 ---
+⏳ 데이터베이스에 연결을 시도합니다...
+✅ 데이터베이스 연결에 성공했습니다!
+⏳ 'bus_driving_records' 테이블에서 데이터를 로드합니다...
+✅ 1044개의 'bus_driving_records' 데이터를 성공적으로 로드했습니다.
+⏳ 'bus_vehicle_master' 테이블에서 데이터를 로드합니다...
+✅ 57개의 'bus_vehicle_master' 데이터를 성공적으로 로드했습니다.
+✅ 전체 1044개 레코드 중 942개의 유효한 레코드로 베이스라인을 계산합니다.
+✅ 베이스라인 인자 계산을 완료했습니다.
+⏳ 'bus_baseline_parameters' 테이블에 데이터를 저장/업데이트합니다...
+❌ 베이스라인 데이터 저장 오류: column "baseline_start_ym" of relation "bus_baseline_parameters" does not exist
+LINE 2: ...INTO bus_baseline_parameters ("vehicle_plate_no", "baseline_...
+                                                             ^
+
+
+✅ 데이터베이스 연결을 닫았습니다.
+2025-08-20 12:17:26,415 - GHGERC_BUS_PROJECT - INFO - ✅ Success: '02_calculate_baseline.py' finished successfully.
+2025-08-20 12:17:26,415 - GHGERC_BUS_PROJECT - INFO - ============================================================
+2025-08-20 12:17:26,415 - GHGERC_BUS_PROJECT - INFO - 🚀 Executing: 04_calculate_business_target.py
+2025-08-20 12:17:26,415 - GHGERC_BUS_PROJECT - INFO - ============================================================
+2025-08-20 12:17:27,366 - GHGERC_BUS_PROJECT - INFO - --- Output from 04_calculate_business_target.py ---
+--- [파일 4] 사업 목표 감축량 계산 시작 ---
+⏳ 데이터베이스에 연결을 시도합니다...
+✅ 데이터베이스 연결에 성공했습니다!
+⏳ 	'bus_baseline_parameters' 테이블에서 데이터를 로드합니다...
+✅ 29개의 	'bus_baseline_parameters' 데이터를 성공적으로 로드했습니다.
+⏳ 	'bus_vehicle_master' 테이블에서 데이터를 로드합니다...
+✅ 57개의 	'bus_vehicle_master' 데이터를 성공적으로 로드했습니다.
+
+⏳ CO2 감축량을 계산합니다...
+✅ 9개의 대체 버스 감축량을 계산했습니다.
+✅ 7개의 신규 버스를 '미산정'으로 처리했습니다.
+
+[계산된 감축량 데이터 (상위 5개 행)]
+  vehicle_plate_no  calculated_year  ...  co2_reduction_kg  reduction_category
+0        서울74사1032             2025  ...          0.000000                    
+1        서울74사1570             2025  ...          0.000000       신규버스 (감축 미산정)
+2        서울74사1698             2025  ...      85942.828636             대체버스 감축
+3        서울74사2252             2025  ...          0.000000                    
+4        서울74사2777             2025  ...      79755.856596             대체버스 감축
+5        서울74사3043             2025  ...          0.000000                    
+6        서울74사3569             2025  ...      83600.189980             대체버스 감축
+7        서울74사3698             2025  ...          0.000000       신규버스 (감축 미산정)
+8        서울74사4168             2025  ...      90157.266826             대체버스 감축
+9        서울74사4536             2025  ...      85737.846165             대체버스 감축
+
+[10 rows x 8 columns]
+⏳ 'bus_emission_reductions' 테이블에 데이터를 저장/업데이트합니다...
+✅ 29개의 감축량 레코드가 성공적으로 저장/업데이트되었습니다.
+
+✅ 데이터베이스 연결을 닫았습니다.
+2025-08-20 12:17:27,366 - GHGERC_BUS_PROJECT - INFO - ✅ Success: '04_calculate_business_target.py' finished successfully.
+2025-08-20 12:17:27,367 - GHGERC_BUS_PROJECT - INFO - ============================================================
+2025-08-20 12:17:27,367 - GHGERC_BUS_PROJECT - INFO - 🚀 Executing: 05_co2_reduction_calc.py
+2025-08-20 12:17:27,367 - GHGERC_BUS_PROJECT - INFO - ============================================================
+2025-08-20 12:17:28,364 - GHGERC_BUS_PROJECT - INFO - --- Output from 05_co2_reduction_calc.py ---
+--- [파일 5] 상세 CO2 감축량 계산 시작 (엑셀 로직 기반) ---
+⏳ 데이터베이스에 연결을 시도합니다...
+✅ 데이터베이스 연결에 성공했습니다!
+⏳ 감축량 계산을 위해 'bus_baseline_parameters'와 'bus_vehicle_master' 테이블에서 데이터를 로드합니다...
+✅ 9개의 계산 대상 차량 데이터를 성공적으로 로드했습니다.
+
+⏳ CO2 감축량을 상세 로직에 따라 계산합니다...
+
+ℹ️  CNG 연료량은 DB의 'L' 단위 컬럼 값을 질량(kg)으로 간주하고, 밀도를 이용해 부피(m³)로 변환하여 계산합니다.
+
+[상세 계산된 감축량 데이터 (상위 5개 행)]
+  vehicle_plate_no  calculated_year  ...  co2_reduction_kg  reduction_category
+0        서울74사1698             2025  ...      95332.082665        대체버스 감축 (상세)
+1        서울74사2777             2025  ...      78204.783743        대체버스 감축 (상세)
+2        서울74사3569             2025  ...      92733.510736        대체버스 감축 (상세)
+3        서울74사4168             2025  ...      88403.909831        대체버스 감축 (상세)
+4        서울74사4536             2025  ...      95104.705859        대체버스 감축 (상세)
+
+[5 rows x 8 columns]
+⏳ 'bus_emission_reductions' 테이블에 상세 계산된 감축량 데이터를 저장/업데이트합니다...
+✅ 9개의 감축량 레코드가 성공적으로 저장/업데이트되었습니다.
+
+✅ 데이터베이스 연결을 닫았습니다.
+2025-08-20 12:17:28,364 - GHGERC_BUS_PROJECT - INFO - ✅ Success: '05_co2_reduction_calc.py' finished successfully.
+2025-08-20 12:17:28,365 - GHGERC_BUS_PROJECT - INFO - ============================================================
+2025-08-20 12:17:28,365 - GHGERC_BUS_PROJECT - INFO - 🚀 Executing: 03_display_baseline.py
+2025-08-20 12:17:28,365 - GHGERC_BUS_PROJECT - INFO - ============================================================
+2025-08-20 12:17:28,970 - GHGERC_BUS_PROJECT - INFO - --- Output from 03_display_baseline.py ---
+--- [파일 3] 베이스라인 인자 조회 및 출력 시작 ---
+⏳ 데이터베이스에 연결을 시도합니다...
+✅ 데이터베이스 연결에 성공했습니다!
+
+⏳ 베이스라인 인자 및 차량 마스터 데이터를 조회합니다...
+⏳ 'bus_baseline_parameters' 테이블에서 데이터를 로드합니다...
+✅ 29개의 'bus_baseline_parameters' 데이터를 성공적으로 로드했습니다.
+⏳ 'bus_vehicle_master' 테이블에서 데이터를 로드합니다...
+✅ 57개의 'bus_vehicle_master' 데이터를 성공적으로 로드했습니다.
+
+====================================================================================================
+                                      [ 최종 베이스라인 인자 ]
+====================================================================================================
+❌ 데이터 조회 중 오류 발생: "['베이스라인_시작월', '베이스라인_종료월'] not in index"
+
+✅ 데이터베이스 연결을 닫았습니다.
+2025-08-20 12:17:28,970 - GHGERC_BUS_PROJECT - INFO - ✅ Success: '03_display_baseline.py' finished successfully.
+2025-08-20 12:17:28,971 - GHGERC_BUS_PROJECT - INFO - ============================================================
+2025-08-20 12:17:28,971 - GHGERC_BUS_PROJECT - INFO - 🚀 Executing: 06_Report.py
+2025-08-20 12:17:28,971 - GHGERC_BUS_PROJECT - INFO - ============================================================
+2025-08-20 12:17:29,845 - GHGERC_BUS_PROJECT - INFO - --- Output from 06_Report.py ---
+--- [파일 6] 종합 분석 보고서(Excel) 생성 시작 ---
+⏳ 데이터베이스에 연결을 시도합니다...
+✅ 데이터베이스 연결에 성공했습니다!
+⏳ [1/3] 종합 보고서 데이터를 로드합니다...
+❌ 보고서 생성 중 오류 발생: Execution failed on sql '
+        SELECT
+            vm.vehicle_plate_no,
+            vm.company_name,
+            vm.business_type,
+            vm.model_year,
+            vm.original_fuel_type,
+            vm.ev_registration_date,
+            bp.baseline_start_ym,
+            bp.baseline_end_ym,
+            bp.months_of_operation,
+            bp.avg_annual_distance_km,
+            bp.avg_annual_fuel_l,
+            bp.fuel_per_km,
+            er.calculated_year,
+            er.baseline_emission_factor,
+            er.baseline_co2_emission_kg,
+            er.co2_reduction_kg,
+            er.reduction_category
+        FROM
+            bus_vehicle_master vm
+        LEFT JOIN
+            bus_baseline_parameters bp ON vm.vehicle_plate_no = bp.vehicle_plate_no
+        LEFT JOIN
+            bus_emission_reductions er ON vm.vehicle_plate_no = er.vehicle_plate_no
+        ORDER BY
+            vm.company_name, vm.vehicle_plate_no;
+        ': column bp.baseline_start_ym does not exist
+LINE 9:             bp.baseline_start_ym,
+                    ^
+
+
+✅ 데이터베이스 연결을 닫았습니다.
+2025-08-20 12:17:29,846 - GHGERC_BUS_PROJECT - INFO - ✅ Success: '06_Report.py' finished successfully.
+2025-08-20 12:17:29,846 - GHGERC_BUS_PROJECT - INFO - 🎉🎉🎉 All scripts executed successfully! Pipeline finished. 🎉🎉🎉
+2025-08-20 12:18:31,417 - GHGERC_BUS_PROJECT - INFO - ===== 🚌 Bus CO2 Reduction Calculation Pipeline Start =====
+2025-08-20 12:18:32,808 - GHGERC_BUS_PROJECT - INFO - ============================================================
+2025-08-20 12:18:32,810 - GHGERC_BUS_PROJECT - INFO - 🚀 Executing: 00_edit_db.py
+2025-08-20 12:18:32,811 - GHGERC_BUS_PROJECT - INFO - ============================================================
+2025-08-20 12:18:34,824 - GHGERC_BUS_PROJECT - INFO - --- Output from 00_edit_db.py ---
+--- [파일 00] 데이터베이스 스키마 관리 시작 ---
+⏳ 데이터베이스에 연결을 시도합니다...
+✅ 데이터베이스 연결에 성공했습니다!
+
+--- 기존 테이블 삭제 및 새 테이블 생성 시작 ---
+✅ 테이블 삭제: EXISTS 성공적으로 실행되었습니다.
+✅ 테이블 삭제: EXISTS 성공적으로 실행되었습니다.
+✅ 테이블 삭제: EXISTS 성공적으로 실행되었습니다.
+✅ 테이블 삭제: EXISTS 성공적으로 실행되었습니다.
+✅ 'bus_vehicle_master' 테이블 생성 성공적으로 실행되었습니다.
+✅ 'bus_driving_records' 테이블 생성 성공적으로 실행되었습니다.
+✅ 'bus_baseline_parameters' 테이블 생성 성공적으로 실행되었습니다.
+✅ 'bus_emission_reductions' 테이블 생성 성공적으로 실행되었습니다.
+--- 기존 테이블 삭제 및 새 테이블 생성 완료 ---
+
+✅ 데이터베이스 연결을 닫았습니다.
+2025-08-20 12:18:34,825 - GHGERC_BUS_PROJECT - INFO - ✅ Success: '00_edit_db.py' finished successfully.
+2025-08-20 12:18:34,825 - GHGERC_BUS_PROJECT - INFO - ============================================================
+2025-08-20 12:18:34,825 - GHGERC_BUS_PROJECT - INFO - 🚀 Executing: 01_insert_monthly_data.py
+2025-08-20 12:18:34,826 - GHGERC_BUS_PROJECT - INFO - ============================================================
+2025-08-20 12:18:36,136 - GHGERC_BUS_PROJECT - INFO - --- Output from 01_insert_monthly_data.py ---
+--- [파일 1] 월별 운행 기록 데이터 생성 및 DB 적재 시작 ---
+✅ 가상 데이터 생성 및 정제를 완료했습니다.
+✅ 생성된 데이터를 엑셀 파일로 저장했습니다: generated_data\generated_bus_data_20250820_121835.xlsx
+⏳ 데이터베이스에 연결을 시도합니다...
+✅ 데이터베이스 연결에 성공했습니다!
+⏳ 'bus_vehicle_master' 테이블에 차량 마스터 데이터를 저장/업데이트합니다...
+✅ 18개의 차량 마스터 레코드가 성공적으로 저장/업데이트되었습니다.
+⏳ 'bus_driving_records' 테이블에 월별 데이터를 적재합니다...
+ℹ️ 494개의 월별 운행 기록 레코드 중 업데이트 또는 삽입된 레코드가 없습니다 (모두 중복).
+
+✅ 데이터베이스 연결을 닫았습니다.
+2025-08-20 12:18:36,136 - GHGERC_BUS_PROJECT - INFO - ✅ Success: '01_insert_monthly_data.py' finished successfully.
+2025-08-20 12:18:36,136 - GHGERC_BUS_PROJECT - INFO - ============================================================
+2025-08-20 12:18:36,136 - GHGERC_BUS_PROJECT - INFO - 🚀 Executing: 02_calculate_baseline.py
+2025-08-20 12:18:36,137 - GHGERC_BUS_PROJECT - INFO - ============================================================
+2025-08-20 12:18:36,853 - GHGERC_BUS_PROJECT - INFO - --- Output from 02_calculate_baseline.py ---
+--- [파일 2] 베이스라인 인자 계산 및 DB 적재 시작 ---
+⏳ 데이터베이스에 연결을 시도합니다...
+✅ 데이터베이스 연결에 성공했습니다!
+⏳ 'bus_driving_records' 테이블에서 데이터를 로드합니다...
+✅ 494개의 'bus_driving_records' 데이터를 성공적으로 로드했습니다.
+⏳ 'bus_vehicle_master' 테이블에서 데이터를 로드합니다...
+✅ 18개의 'bus_vehicle_master' 데이터를 성공적으로 로드했습니다.
+✅ 전체 494개 레코드 중 256개의 유효한 레코드로 베이스라인을 계산합니다.
+✅ 베이스라인 인자 계산을 완료했습니다.
+⏳ 'bus_baseline_parameters' 테이블에 데이터를 저장/업데이트합니다...
+✅ 8개의 베이스라인 레코드가 성공적으로 저장/업데이트되었습니다.
+
+✅ 데이터베이스 연결을 닫았습니다.
+2025-08-20 12:18:36,853 - GHGERC_BUS_PROJECT - INFO - ✅ Success: '02_calculate_baseline.py' finished successfully.
+2025-08-20 12:18:36,853 - GHGERC_BUS_PROJECT - INFO - ============================================================
+2025-08-20 12:18:36,853 - GHGERC_BUS_PROJECT - INFO - 🚀 Executing: 04_calculate_business_target.py
+2025-08-20 12:18:36,853 - GHGERC_BUS_PROJECT - INFO - ============================================================
+2025-08-20 12:18:37,859 - GHGERC_BUS_PROJECT - INFO - --- Output from 04_calculate_business_target.py ---
+--- [파일 4] 사업 목표 감축량 계산 시작 ---
+⏳ 데이터베이스에 연결을 시도합니다...
+✅ 데이터베이스 연결에 성공했습니다!
+⏳ 	'bus_baseline_parameters' 테이블에서 데이터를 로드합니다...
+✅ 8개의 	'bus_baseline_parameters' 데이터를 성공적으로 로드했습니다.
+⏳ 	'bus_vehicle_master' 테이블에서 데이터를 로드합니다...
+✅ 18개의 	'bus_vehicle_master' 데이터를 성공적으로 로드했습니다.
+
+⏳ CO2 감축량을 계산합니다...
+
+[계산된 감축량 데이터 (상위 5개 행)]
+  vehicle_plate_no  calculated_year  ...  co2_reduction_kg  reduction_category
+0        서울74사1097             2025  ...               0.0                    
+1        서울74사2263             2025  ...               0.0                    
+2        서울74사3206             2025  ...               0.0                    
+3        서울74사3741             2025  ...               0.0                    
+4        서울74사4804             2025  ...               0.0                    
+5        서울74사5250             2025  ...               0.0                    
+6        서울74사6440             2025  ...               0.0                    
+7        서울74사6682             2025  ...               0.0                    
+
+[8 rows x 8 columns]
+⏳ 'bus_emission_reductions' 테이블에 데이터를 저장/업데이트합니다...
+✅ 8개의 감축량 레코드가 성공적으로 저장/업데이트되었습니다.
+
+✅ 데이터베이스 연결을 닫았습니다.
+2025-08-20 12:18:37,859 - GHGERC_BUS_PROJECT - INFO - ✅ Success: '04_calculate_business_target.py' finished successfully.
+2025-08-20 12:18:37,859 - GHGERC_BUS_PROJECT - INFO - ============================================================
+2025-08-20 12:18:37,859 - GHGERC_BUS_PROJECT - INFO - 🚀 Executing: 05_co2_reduction_calc.py
+2025-08-20 12:18:37,860 - GHGERC_BUS_PROJECT - INFO - ============================================================
+2025-08-20 12:18:38,455 - GHGERC_BUS_PROJECT - INFO - --- Output from 05_co2_reduction_calc.py ---
+--- [파일 5] 상세 CO2 감축량 계산 시작 (엑셀 로직 기반) ---
+⏳ 데이터베이스에 연결을 시도합니다...
+✅ 데이터베이스 연결에 성공했습니다!
+⏳ 감축량 계산을 위해 'bus_baseline_parameters'와 'bus_vehicle_master' 테이블에서 데이터를 로드합니다...
+⚠️ 상세 감축량 계산 대상(CNG, 경유 대체도입 전기버스)이 없습니다.
+
+✅ 데이터베이스 연결을 닫았습니다.
+2025-08-20 12:18:38,456 - GHGERC_BUS_PROJECT - INFO - ✅ Success: '05_co2_reduction_calc.py' finished successfully.
+2025-08-20 12:18:38,456 - GHGERC_BUS_PROJECT - INFO - ============================================================
+2025-08-20 12:18:38,456 - GHGERC_BUS_PROJECT - INFO - 🚀 Executing: 03_display_baseline.py
+2025-08-20 12:18:38,456 - GHGERC_BUS_PROJECT - INFO - ============================================================
+2025-08-20 12:18:39,081 - GHGERC_BUS_PROJECT - INFO - --- Output from 03_display_baseline.py ---
+--- [파일 3] 베이스라인 인자 조회 및 출력 시작 ---
+⏳ 데이터베이스에 연결을 시도합니다...
+✅ 데이터베이스 연결에 성공했습니다!
+
+⏳ 베이스라인 인자 및 차량 마스터 데이터를 조회합니다...
+⏳ 'bus_baseline_parameters' 테이블에서 데이터를 로드합니다...
+✅ 8개의 'bus_baseline_parameters' 데이터를 성공적으로 로드했습니다.
+⏳ 'bus_vehicle_master' 테이블에서 데이터를 로드합니다...
+✅ 18개의 'bus_vehicle_master' 데이터를 성공적으로 로드했습니다.
+
+====================================================================================================
+                                      [ 최종 베이스라인 인자 ]
+====================================================================================================
+        차량번호    업체명  사업구분 기존 연료  ... 산정월수 연평균주행거리(km)  연평균주유량(L)  연비(L/km)
+0  서울74사1097  데이터교통  대체도입   CNG  ...   29   64,996.72  32,456.72      0.50
+1  서울74사2263   희망버스  신규도입    경유  ...   34   65,324.45  33,574.04      0.51
+2  서울74사3206   미래운수  신규도입   CNG  ...   32   65,434.57  34,490.91      0.53
+3  서울74사3741   가상교통  신규도입   CNG  ...   35   62,136.55  33,394.56      0.54
+4  서울74사4804   가상교통  신규도입    경유  ...   32   64,262.84  33,512.82      0.52
+5  서울74사5250  데이터교통  대체도입    경유  ...   30   63,471.34  33,532.05      0.53
+6  서울74사6440   미래운수  대체도입   CNG  ...   31   66,073.45  33,622.65      0.51
+7  서울74사6682   미래운수  대체도입   CNG  ...   33   65,618.18  33,722.28      0.51
+
+[8 rows x 10 columns]
+====================================================================================================
+
+✅ 데이터베이스 연결을 닫았습니다.
+2025-08-20 12:18:39,081 - GHGERC_BUS_PROJECT - INFO - ✅ Success: '03_display_baseline.py' finished successfully.
+2025-08-20 12:18:39,081 - GHGERC_BUS_PROJECT - INFO - ============================================================
+2025-08-20 12:18:39,082 - GHGERC_BUS_PROJECT - INFO - 🚀 Executing: 06_Report.py
+2025-08-20 12:18:39,082 - GHGERC_BUS_PROJECT - INFO - ============================================================
+2025-08-20 12:18:39,984 - GHGERC_BUS_PROJECT - INFO - --- Output from 06_Report.py ---
+--- [파일 6] 종합 분석 보고서(Excel) 생성 시작 ---
+⏳ 데이터베이스에 연결을 시도합니다...
+✅ 데이터베이스 연결에 성공했습니다!
+⏳ [1/3] 종합 보고서 데이터를 로드합니다...
+⏳ [2/3] 월별 운행기록 데이터를 로드합니다...
+⏳ [3/3] 베이스라인 계산결과 데이터를 로드합니다...
+
+⏳ 생성된 보고서를 Excel 파일로 저장합니다: reports\bus_analysis_report_20250820_121839.xlsx
+✅ 보고서 저장이 완료되었습니다: reports\bus_analysis_report_20250820_121839.xlsx
+
+✅ 데이터베이스 연결을 닫았습니다.
+2025-08-20 12:18:39,985 - GHGERC_BUS_PROJECT - INFO - ✅ Success: '06_Report.py' finished successfully.
+2025-08-20 12:18:39,985 - GHGERC_BUS_PROJECT - INFO - 🎉🎉🎉 All scripts executed successfully! Pipeline finished. 🎉🎉🎉
+2025-08-20 13:25:50,984 - GHGERC_BUS_PROJECT - INFO - ===== 🚌 Bus CO2 Reduction Calculation Pipeline Start =====
+2025-08-20 13:25:53,155 - GHGERC_BUS_PROJECT - INFO - ============================================================
+2025-08-20 13:25:53,156 - GHGERC_BUS_PROJECT - INFO - 🚀 Executing: 00_edit_db.py
+2025-08-20 13:25:53,157 - GHGERC_BUS_PROJECT - INFO - ============================================================
+2025-08-20 13:25:55,837 - GHGERC_BUS_PROJECT - INFO - --- Output from 00_edit_db.py ---
+--- [파일 00] 데이터베이스 스키마 관리 시작 ---
+⏳ 데이터베이스에 연결을 시도합니다...
+✅ 데이터베이스 연결에 성공했습니다!
+
+--- 기존 테이블 삭제 및 새 테이블 생성 시작 ---
+✅ 테이블 삭제: EXISTS 성공적으로 실행되었습니다.
+✅ 테이블 삭제: EXISTS 성공적으로 실행되었습니다.
+✅ 테이블 삭제: EXISTS 성공적으로 실행되었습니다.
+✅ 테이블 삭제: EXISTS 성공적으로 실행되었습니다.
+✅ 'bus_vehicle_master' 테이블 생성 성공적으로 실행되었습니다.
+✅ 'bus_driving_records' 테이블 생성 성공적으로 실행되었습니다.
+✅ 'bus_baseline_parameters' 테이블 생성 성공적으로 실행되었습니다.
+✅ 'bus_emission_reductions' 테이블 생성 성공적으로 실행되었습니다.
+--- 기존 테이블 삭제 및 새 테이블 생성 완료 ---
+
+✅ 데이터베이스 연결을 닫았습니다.
+2025-08-20 13:25:55,837 - GHGERC_BUS_PROJECT - INFO - ✅ Success: '00_edit_db.py' finished successfully.
+2025-08-20 13:25:55,838 - GHGERC_BUS_PROJECT - INFO - ============================================================
+2025-08-20 13:25:55,838 - GHGERC_BUS_PROJECT - INFO - 🚀 Executing: 01_insert_monthly_data.py
+2025-08-20 13:25:55,839 - GHGERC_BUS_PROJECT - INFO - ============================================================
+2025-08-20 13:25:57,270 - GHGERC_BUS_PROJECT - INFO - --- Output from 01_insert_monthly_data.py ---
+--- [파일 1] 월별 운행 기록 데이터 생성 및 DB 적재 시작 ---
+✅ 가상 데이터 생성 및 정제를 완료했습니다.
+✅ 생성된 데이터를 엑셀 파일로 저장했습니다: generated_data\generated_bus_data_20250820_132556.xlsx
+⏳ 데이터베이스에 연결을 시도합니다...
+✅ 데이터베이스 연결에 성공했습니다!
+⏳ 'bus_vehicle_master' 테이블에 차량 마스터 데이터를 저장/업데이트합니다...
+✅ 19개의 차량 마스터 레코드가 성공적으로 저장/업데이트되었습니다.
+⏳ 'bus_driving_records' 테이블에 월별 데이터를 적재합니다...
+ℹ️ 485개의 월별 운행 기록 레코드 중 업데이트 또는 삽입된 레코드가 없습니다 (모두 중복).
+
+✅ 데이터베이스 연결을 닫았습니다.
+2025-08-20 13:25:57,271 - GHGERC_BUS_PROJECT - INFO - ✅ Success: '01_insert_monthly_data.py' finished successfully.
+2025-08-20 13:25:57,271 - GHGERC_BUS_PROJECT - INFO - ============================================================
+2025-08-20 13:25:57,271 - GHGERC_BUS_PROJECT - INFO - 🚀 Executing: 02_calculate_baseline.py
+2025-08-20 13:25:57,271 - GHGERC_BUS_PROJECT - INFO - ============================================================
+2025-08-20 13:25:58,170 - GHGERC_BUS_PROJECT - INFO - --- Output from 02_calculate_baseline.py ---
+--- [파일 2] 베이스라인 인자 계산 및 DB 적재 시작 ---
+⏳ 데이터베이스에 연결을 시도합니다...
+✅ 데이터베이스 연결에 성공했습니다!
+⏳ 'bus_driving_records' 테이블에서 데이터를 로드합니다...
+✅ 485개의 'bus_driving_records' 데이터를 성공적으로 로드했습니다.
+⏳ 'bus_vehicle_master' 테이블에서 데이터를 로드합니다...
+✅ 19개의 'bus_vehicle_master' 데이터를 성공적으로 로드했습니다.
+✅ 전체 485개 레코드 중 257개의 유효한 레코드로 베이스라인을 계산합니다.
+✅ 베이스라인 인자 계산을 완료했습니다.
+⏳ 'bus_baseline_parameters' 테이블에 데이터를 저장/업데이트합니다...
+✅ 8개의 베이스라인 레코드가 성공적으로 저장/업데이트되었습니다.
+
+✅ 데이터베이스 연결을 닫았습니다.
+2025-08-20 13:25:58,170 - GHGERC_BUS_PROJECT - INFO - ✅ Success: '02_calculate_baseline.py' finished successfully.
+2025-08-20 13:25:58,170 - GHGERC_BUS_PROJECT - INFO - ============================================================
+2025-08-20 13:25:58,171 - GHGERC_BUS_PROJECT - INFO - 🚀 Executing: 04_calculate_business_target.py
+2025-08-20 13:25:58,171 - GHGERC_BUS_PROJECT - INFO - ============================================================
+2025-08-20 13:25:58,913 - GHGERC_BUS_PROJECT - INFO - --- Output from 04_calculate_business_target.py ---
+--- [파일 4] 사업 목표 감축량 계산 시작 ---
+⏳ 데이터베이스에 연결을 시도합니다...
+✅ 데이터베이스 연결에 성공했습니다!
+⏳ 	'bus_baseline_parameters' 테이블에서 데이터를 로드합니다...
+✅ 8개의 	'bus_baseline_parameters' 데이터를 성공적으로 로드했습니다.
+⏳ 	'bus_vehicle_master' 테이블에서 데이터를 로드합니다...
+✅ 19개의 	'bus_vehicle_master' 데이터를 성공적으로 로드했습니다.
+
+⏳ CO2 감축량을 계산합니다...
+
+[계산된 감축량 데이터 (상위 5개 행)]
+  vehicle_plate_no  calculated_year  ...  co2_reduction_kg  reduction_category
+0        서울74사1570             2025  ...               0.0                    
+1        서울74사1987             2025  ...               0.0                    
+2        서울74사2894             2025  ...               0.0                    
+3        서울74사3487             2025  ...               0.0                    
+4        서울74사7084             2025  ...               0.0                    
+5        서울74사7356             2025  ...               0.0                    
+6        서울74사8618             2025  ...               0.0                    
+7        서울74사9071             2025  ...               0.0                    
+
+[8 rows x 8 columns]
+⏳ 'bus_emission_reductions' 테이블에 데이터를 저장/업데이트합니다...
+✅ 8개의 감축량 레코드가 성공적으로 저장/업데이트되었습니다.
+
+✅ 데이터베이스 연결을 닫았습니다.
+2025-08-20 13:25:58,913 - GHGERC_BUS_PROJECT - INFO - ✅ Success: '04_calculate_business_target.py' finished successfully.
+2025-08-20 13:25:58,913 - GHGERC_BUS_PROJECT - INFO - ============================================================
+2025-08-20 13:25:58,914 - GHGERC_BUS_PROJECT - INFO - 🚀 Executing: 05_co2_reduction_calc.py
+2025-08-20 13:25:58,914 - GHGERC_BUS_PROJECT - INFO - ============================================================
+2025-08-20 13:25:59,506 - GHGERC_BUS_PROJECT - INFO - --- Output from 05_co2_reduction_calc.py ---
+--- [파일 5] 상세 CO2 감축량 계산 시작 (엑셀 로직 기반) ---
+⏳ 데이터베이스에 연결을 시도합니다...
+✅ 데이터베이스 연결에 성공했습니다!
+⏳ 감축량 계산을 위해 'bus_baseline_parameters'와 'bus_vehicle_master' 테이블에서 데이터를 로드합니다...
+⚠️ 상세 감축량 계산 대상(CNG, 경유 대체도입 전기버스)이 없습니다.
+
+✅ 데이터베이스 연결을 닫았습니다.
+2025-08-20 13:25:59,507 - GHGERC_BUS_PROJECT - INFO - ✅ Success: '05_co2_reduction_calc.py' finished successfully.
+2025-08-20 13:25:59,507 - GHGERC_BUS_PROJECT - INFO - ============================================================
+2025-08-20 13:25:59,507 - GHGERC_BUS_PROJECT - INFO - 🚀 Executing: 03_display_baseline.py
+2025-08-20 13:25:59,507 - GHGERC_BUS_PROJECT - INFO - ============================================================
+2025-08-20 13:26:00,130 - GHGERC_BUS_PROJECT - INFO - --- Output from 03_display_baseline.py ---
+--- [파일 3] 베이스라인 인자 조회 및 출력 시작 ---
+⏳ 데이터베이스에 연결을 시도합니다...
+✅ 데이터베이스 연결에 성공했습니다!
+
+⏳ 베이스라인 인자 및 차량 마스터 데이터를 조회합니다...
+⏳ 'bus_baseline_parameters' 테이블에서 데이터를 로드합니다...
+✅ 8개의 'bus_baseline_parameters' 데이터를 성공적으로 로드했습니다.
+⏳ 'bus_vehicle_master' 테이블에서 데이터를 로드합니다...
+✅ 19개의 'bus_vehicle_master' 데이터를 성공적으로 로드했습니다.
+
+====================================================================================================
+                                      [ 최종 베이스라인 인자 ]
+====================================================================================================
+        차량번호    업체명  사업구분 기존 연료  ... 산정월수 연평균주행거리(km)  연평균주유량(L)  연비(L/km)
+0  서울74사1570   가상교통  신규도입   CNG  ...   32   65,070.34  33,201.59      0.51
+1  서울74사1987   희망버스  신규도입   CNG  ...   32   68,613.53  35,504.02      0.52
+2  서울74사2894   희망버스  신규도입    경유  ...   32   68,035.27  34,520.79      0.51
+3  서울74사3487   가상교통  신규도입   CNG  ...   32   66,959.76  33,654.37      0.50
+4  서울74사7084   가상교통  대체도입   CNG  ...   32   65,185.82  32,751.98      0.50
+5  서울74사7356  데이터교통  대체도입    경유  ...   32   63,621.11  32,334.82      0.51
+6  서울74사8618  데이터교통  대체도입   CNG  ...   30   65,811.74  33,677.11      0.51
+7  서울74사9071  데이터교통  신규도입    경유  ...   35   65,493.58  33,796.03      0.52
+
+[8 rows x 10 columns]
+====================================================================================================
+
+✅ 데이터베이스 연결을 닫았습니다.
+2025-08-20 13:26:00,130 - GHGERC_BUS_PROJECT - INFO - ✅ Success: '03_display_baseline.py' finished successfully.
+2025-08-20 13:26:00,130 - GHGERC_BUS_PROJECT - INFO - ============================================================
+2025-08-20 13:26:00,130 - GHGERC_BUS_PROJECT - INFO - 🚀 Executing: 06_Report.py
+2025-08-20 13:26:00,130 - GHGERC_BUS_PROJECT - INFO - ============================================================
+2025-08-20 13:26:01,031 - GHGERC_BUS_PROJECT - INFO - --- Output from 06_Report.py ---
+--- [파일 6] 종합 분석 보고서(Excel) 생성 시작 ---
+⏳ 데이터베이스에 연결을 시도합니다...
+✅ 데이터베이스 연결에 성공했습니다!
+⏳ [1/3] 종합 보고서 데이터를 로드합니다...
+⏳ [2/3] 월별 운행기록 데이터를 로드합니다...
+⏳ [3/3] 베이스라인 계산결과 데이터를 로드합니다...
+
+⏳ 생성된 보고서를 Excel 파일로 저장합니다: reports\bus_analysis_report_20250820_132600.xlsx
+✅ 보고서 저장이 완료되었습니다: reports\bus_analysis_report_20250820_132600.xlsx
+
+✅ 데이터베이스 연결을 닫았습니다.
+2025-08-20 13:26:01,032 - GHGERC_BUS_PROJECT - INFO - ✅ Success: '06_Report.py' finished successfully.
+2025-08-20 13:26:01,032 - GHGERC_BUS_PROJECT - INFO - 🎉🎉🎉 All scripts executed successfully! Pipeline finished. 🎉🎉🎉
+2025-08-20 15:25:40,524 - GHGERC_BUS_PROJECT - INFO - ===== 🚌 Bus CO2 Reduction Calculation Pipeline Start =====
+2025-08-20 15:25:41,940 - GHGERC_BUS_PROJECT - INFO - ============================================================
+2025-08-20 15:25:41,941 - GHGERC_BUS_PROJECT - INFO - 🚀 Executing: 00_edit_db.py
+2025-08-20 15:25:41,941 - GHGERC_BUS_PROJECT - INFO - ============================================================
+2025-08-20 15:25:43,967 - GHGERC_BUS_PROJECT - INFO - --- Output from 00_edit_db.py ---
+--- [파일 00] 데이터베이스 스키마 관리 시작 ---
+⏳ 데이터베이스에 연결을 시도합니다...
+✅ 데이터베이스 연결에 성공했습니다!
+
+--- 기존 테이블 삭제 및 새 테이블 생성 시작 ---
+✅ 테이블 삭제: EXISTS 성공적으로 실행되었습니다.
+✅ 테이블 삭제: EXISTS 성공적으로 실행되었습니다.
+✅ 테이블 삭제: EXISTS 성공적으로 실행되었습니다.
+✅ 테이블 삭제: EXISTS 성공적으로 실행되었습니다.
+✅ 'bus_vehicle_master' 테이블 생성 성공적으로 실행되었습니다.
+✅ 'bus_driving_records' 테이블 생성 성공적으로 실행되었습니다.
+✅ 'bus_baseline_parameters' 테이블 생성 성공적으로 실행되었습니다.
+✅ 'bus_emission_reductions' 테이블 생성 성공적으로 실행되었습니다.
+--- 기존 테이블 삭제 및 새 테이블 생성 완료 ---
+
+✅ 데이터베이스 연결을 닫았습니다.
+2025-08-20 15:25:43,968 - GHGERC_BUS_PROJECT - INFO - ✅ Success: '00_edit_db.py' finished successfully.
+2025-08-20 15:25:43,968 - GHGERC_BUS_PROJECT - INFO - ============================================================
+2025-08-20 15:25:43,968 - GHGERC_BUS_PROJECT - INFO - 🚀 Executing: 01_insert_monthly_data.py
+2025-08-20 15:25:43,968 - GHGERC_BUS_PROJECT - INFO - ============================================================
+2025-08-20 15:25:45,345 - GHGERC_BUS_PROJECT - INFO - --- Output from 01_insert_monthly_data.py ---
+--- [파일 1] 월별 운행 기록 데이터 생성 및 DB 적재 시작 ---
+✅ 가상 데이터 생성 및 정제를 완료했습니다.
+✅ 생성된 데이터를 엑셀 파일로 저장했습니다: generated_data\generated_bus_data_20250820_152544.xlsx
+⏳ 데이터베이스에 연결을 시도합니다...
+✅ 데이터베이스 연결에 성공했습니다!
+⏳ 'bus_vehicle_master' 테이블에 차량 마스터 데이터를 저장/업데이트합니다...
+✅ 21개의 차량 마스터 레코드가 성공적으로 저장/업데이트되었습니다.
+⏳ 'bus_driving_records' 테이블에 월별 데이터를 적재합니다...
+ℹ️ 480개의 월별 운행 기록 레코드 중 업데이트 또는 삽입된 레코드가 없습니다 (모두 중복).
+
+✅ 데이터베이스 연결을 닫았습니다.
+2025-08-20 15:25:45,346 - GHGERC_BUS_PROJECT - INFO - ✅ Success: '01_insert_monthly_data.py' finished successfully.
+2025-08-20 15:25:45,346 - GHGERC_BUS_PROJECT - INFO - ============================================================
+2025-08-20 15:25:45,346 - GHGERC_BUS_PROJECT - INFO - 🚀 Executing: 02_calculate_baseline.py
+2025-08-20 15:25:45,346 - GHGERC_BUS_PROJECT - INFO - ============================================================
+2025-08-20 15:25:46,322 - GHGERC_BUS_PROJECT - INFO - --- Output from 02_calculate_baseline.py ---
+--- [파일 2] 베이스라인 인자 계산 및 DB 적재 시작 ---
+⏳ 데이터베이스에 연결을 시도합니다...
+✅ 데이터베이스 연결에 성공했습니다!
+⏳ 'bus_driving_records' 테이블에서 데이터를 로드합니다...
+✅ 480개의 'bus_driving_records' 데이터를 성공적으로 로드했습니다.
+⏳ 'bus_vehicle_master' 테이블에서 데이터를 로드합니다...
+✅ 21개의 'bus_vehicle_master' 데이터를 성공적으로 로드했습니다.
+✅ 전체 480개 레코드 중 219개의 유효한 레코드로 베이스라인을 계산합니다.
+✅ 베이스라인 인자 계산을 완료했습니다.
+⏳ 'bus_baseline_parameters' 테이블에 데이터를 저장/업데이트합니다...
+✅ 7개의 베이스라인 레코드가 성공적으로 저장/업데이트되었습니다.
+
+✅ 데이터베이스 연결을 닫았습니다.
+2025-08-20 15:25:46,322 - GHGERC_BUS_PROJECT - INFO - ✅ Success: '02_calculate_baseline.py' finished successfully.
+2025-08-20 15:25:46,322 - GHGERC_BUS_PROJECT - INFO - ============================================================
+2025-08-20 15:25:46,322 - GHGERC_BUS_PROJECT - INFO - 🚀 Executing: 04_calculate_business_target.py
+2025-08-20 15:25:46,322 - GHGERC_BUS_PROJECT - INFO - ============================================================
+2025-08-20 15:25:48,081 - GHGERC_BUS_PROJECT - INFO - --- Output from 04_calculate_business_target.py ---
+--- [파일 4] 사업 목표 감축량 계산 시작 ---
+⏳ 데이터베이스에 연결을 시도합니다...
+✅ 데이터베이스 연결에 성공했습니다!
+⏳ 	'bus_baseline_parameters' 테이블에서 데이터를 로드합니다...
+✅ 7개의 	'bus_baseline_parameters' 데이터를 성공적으로 로드했습니다.
+⏳ 	'bus_vehicle_master' 테이블에서 데이터를 로드합니다...
+✅ 21개의 	'bus_vehicle_master' 데이터를 성공적으로 로드했습니다.
+
+⏳ CO2 감축량을 계산합니다...
+
+[계산된 감축량 데이터 (상위 5개 행)]
+  vehicle_plate_no  calculated_year  ...  co2_reduction_kg  reduction_category
+0        서울74사2465             2025  ...               0.0                    
+1        서울74사2671             2025  ...               0.0                    
+2        서울74사2825             2025  ...               0.0                    
+3        서울74사3437             2025  ...               0.0                    
+4        서울74사3466             2025  ...               0.0                    
+5        서울74사4962             2025  ...               0.0                    
+6        서울74사5985             2025  ...               0.0                    
+
+[7 rows x 8 columns]
+⏳ 'bus_emission_reductions' 테이블에 데이터를 저장/업데이트합니다...
+✅ 7개의 감축량 레코드가 성공적으로 저장/업데이트되었습니다.
+
+✅ 데이터베이스 연결을 닫았습니다.
+2025-08-20 15:25:48,081 - GHGERC_BUS_PROJECT - INFO - ✅ Success: '04_calculate_business_target.py' finished successfully.
+2025-08-20 15:25:48,082 - GHGERC_BUS_PROJECT - INFO - ============================================================
+2025-08-20 15:25:48,082 - GHGERC_BUS_PROJECT - INFO - 🚀 Executing: 05_co2_reduction_calc.py
+2025-08-20 15:25:48,082 - GHGERC_BUS_PROJECT - INFO - ============================================================
+2025-08-20 15:25:48,692 - GHGERC_BUS_PROJECT - INFO - --- Output from 05_co2_reduction_calc.py ---
+--- [파일 5] 상세 CO2 감축량 계산 시작 (엑셀 로직 기반) ---
+⏳ 데이터베이스에 연결을 시도합니다...
+✅ 데이터베이스 연결에 성공했습니다!
+⏳ 감축량 계산을 위해 'bus_baseline_parameters'와 'bus_vehicle_master' 테이블에서 데이터를 로드합니다...
+⚠️ 상세 감축량 계산 대상(CNG, 경유 대체도입 전기버스)이 없습니다.
+
+✅ 데이터베이스 연결을 닫았습니다.
+2025-08-20 15:25:48,693 - GHGERC_BUS_PROJECT - INFO - ✅ Success: '05_co2_reduction_calc.py' finished successfully.
+2025-08-20 15:25:48,693 - GHGERC_BUS_PROJECT - INFO - ============================================================
+2025-08-20 15:25:48,693 - GHGERC_BUS_PROJECT - INFO - 🚀 Executing: 03_display_baseline.py
+2025-08-20 15:25:48,693 - GHGERC_BUS_PROJECT - INFO - ============================================================
+2025-08-20 15:25:49,271 - GHGERC_BUS_PROJECT - INFO - --- Output from 03_display_baseline.py ---
+--- [파일 3] 베이스라인 인자 조회 및 출력 시작 ---
+⏳ 데이터베이스에 연결을 시도합니다...
+✅ 데이터베이스 연결에 성공했습니다!
+
+⏳ 베이스라인 인자 및 차량 마스터 데이터를 조회합니다...
+⏳ 'bus_baseline_parameters' 테이블에서 데이터를 로드합니다...
+✅ 7개의 'bus_baseline_parameters' 데이터를 성공적으로 로드했습니다.
+⏳ 'bus_vehicle_master' 테이블에서 데이터를 로드합니다...
+✅ 21개의 'bus_vehicle_master' 데이터를 성공적으로 로드했습니다.
+
+====================================================================================================
+                                      [ 최종 베이스라인 인자 ]
+====================================================================================================
+        차량번호    업체명  사업구분 기존 연료  ... 산정월수 연평균주행거리(km)  연평균주유량(L)  연비(L/km)
+0  서울74사2465   미래운수  신규도입   CNG  ...   30   64,125.52  32,233.42      0.50
+1  서울74사2671   희망버스  신규도입    경유  ...   33   63,814.34  32,582.75      0.51
+2  서울74사2825  데이터교통  신규도입    경유  ...   32   61,005.94  32,106.48      0.53
+3  서울74사3437  데이터교통  신규도입    경유  ...   32   62,613.32  32,514.47      0.52
+4  서울74사3466   희망버스  신규도입   CNG  ...   30   64,105.96  32,710.80      0.51
+5  서울74사4962  데이터교통  신규도입    경유  ...   33   62,795.43  31,806.37      0.51
+6  서울74사5985   희망버스  대체도입   CNG  ...   29   63,318.65  33,401.34      0.53
+
+[7 rows x 10 columns]
+====================================================================================================
+
+✅ 데이터베이스 연결을 닫았습니다.
+2025-08-20 15:25:49,271 - GHGERC_BUS_PROJECT - INFO - ✅ Success: '03_display_baseline.py' finished successfully.
+2025-08-20 15:25:49,271 - GHGERC_BUS_PROJECT - INFO - ============================================================
+2025-08-20 15:25:49,271 - GHGERC_BUS_PROJECT - INFO - 🚀 Executing: 06_Report.py
+2025-08-20 15:25:49,271 - GHGERC_BUS_PROJECT - INFO - ============================================================
+2025-08-20 15:25:50,126 - GHGERC_BUS_PROJECT - INFO - --- Output from 06_Report.py ---
+--- [파일 6] 종합 분석 보고서(Excel) 생성 시작 ---
+⏳ 데이터베이스에 연결을 시도합니다...
+✅ 데이터베이스 연결에 성공했습니다!
+⏳ [1/3] 종합 보고서 데이터를 로드합니다...
+⏳ [2/3] 월별 운행기록 데이터를 로드합니다...
+⏳ [3/3] 베이스라인 계산결과 데이터를 로드합니다...
+
+⏳ 생성된 보고서를 Excel 파일로 저장합니다: reports\bus_analysis_report_20250820_152549.xlsx
+✅ 보고서 저장이 완료되었습니다: reports\bus_analysis_report_20250820_152549.xlsx
+
+✅ 데이터베이스 연결을 닫았습니다.
+2025-08-20 15:25:50,126 - GHGERC_BUS_PROJECT - INFO - ✅ Success: '06_Report.py' finished successfully.
+2025-08-20 15:25:50,127 - GHGERC_BUS_PROJECT - INFO - 🎉🎉🎉 All scripts executed successfully! Pipeline finished. 🎉🎉🎉
+2025-08-20 16:42:47,164 - GHGERC_BUS_PROJECT - INFO - ===== 🚌 Bus CO2 Reduction Calculation Pipeline Start =====
+2025-08-20 16:42:51,990 - GHGERC_BUS_PROJECT - INFO - ============================================================
+2025-08-20 16:42:51,990 - GHGERC_BUS_PROJECT - INFO - 🚀 Executing: 00_edit_db.py
+2025-08-20 16:42:51,992 - GHGERC_BUS_PROJECT - INFO - ============================================================
+2025-08-20 16:42:55,458 - GHGERC_BUS_PROJECT - INFO - --- Output from 00_edit_db.py ---
+--- [파일 00] 데이터베이스 스키마 관리 시작 ---
+⏳ 데이터베이스에 연결을 시도합니다...
+✅ 데이터베이스 연결에 성공했습니다!
+
+--- 기존 테이블 삭제 및 새 테이블 생성 시작 ---
+✅ 테이블 삭제: EXISTS 성공적으로 실행되었습니다.
+✅ 테이블 삭제: EXISTS 성공적으로 실행되었습니다.
+✅ 테이블 삭제: EXISTS 성공적으로 실행되었습니다.
+✅ 테이블 삭제: EXISTS 성공적으로 실행되었습니다.
+✅ 'bus_vehicle_master' 테이블 생성 성공적으로 실행되었습니다.
+✅ 'bus_driving_records' 테이블 생성 성공적으로 실행되었습니다.
+✅ 'bus_baseline_parameters' 테이블 생성 성공적으로 실행되었습니다.
+✅ 'bus_emission_reductions' 테이블 생성 성공적으로 실행되었습니다.
+--- 기존 테이블 삭제 및 새 테이블 생성 완료 ---
+
+✅ 데이터베이스 연결을 닫았습니다.
+2025-08-20 16:42:55,458 - GHGERC_BUS_PROJECT - INFO - ✅ Success: '00_edit_db.py' finished successfully.
+2025-08-20 16:42:55,459 - GHGERC_BUS_PROJECT - INFO - ============================================================
+2025-08-20 16:42:55,459 - GHGERC_BUS_PROJECT - INFO - 🚀 Executing: 01_insert_monthly_data.py
+2025-08-20 16:42:55,459 - GHGERC_BUS_PROJECT - INFO - ============================================================
+2025-08-20 16:42:57,154 - GHGERC_BUS_PROJECT - ERROR - '01_insert_monthly_data.py' failed to execute.
+2025-08-20 16:42:57,155 - GHGERC_BUS_PROJECT - ERROR - --- STDOUT ---
+--- [파일 1] 월별 운행 기록 데이터 생성 및 DB 적재 시작 ---
+✅ 가상 데이터 생성 및 정제를 완료했습니다.
+✅ 생성된 데이터를 엑셀 파일로 저장했습니다: generated_data\generated_bus_data_20250820_164256.xlsx
+⏳ 데이터베이스에 연결을 시도합니다...
+✅ 데이터베이스 연결에 성공했습니다!
+⏳ 'bus_vehicle_master' 테이블에 차량 마스터 데이터를 저장/업데이트합니다...
+✅ 16개의 차량 마스터 레코드가 성공적으로 저장/업데이트되었습니다.
+⏳ 'bus_driving_records' 테이블에 월별 데이터를 적재합니다...
+ℹ️ 488개의 월별 운행 기록 레코드 중 업데이트 또는 삽입된 레코드가 없습니다 (모두 중복).
+⏳ 'bus_monthly_fuel_data' 테이블에 월별 연료 데이터를 적재합니다...
+❌ 월별 연료 기록 데이터 적재 오류: value too long for type character varying(6)
+CONTEXT:  COPY temp_table, line 1, column record_year_month: "2021-01"
+
+
+✅ 데이터베이스 연결을 닫았습니다.
+--- [파일 1] 월별 운행 기록 데이터 생성 및 DB 적재 시작 ---
+✅ 가상 데이터 생성 및 정제를 완료했습니다.
+✅ 생성된 데이터를 엑셀 파일로 저장했습니다: generated_data\generated_bus_data_20250820_164256.xlsx
+⏳ 데이터베이스에 연결을 시도합니다...
+✅ 데이터베이스 연결에 성공했습니다!
+⏳ 'bus_vehicle_master' 테이블에 차량 마스터 데이터를 저장/업데이트합니다...
+✅ 21개의 차량 마스터 레코드가 성공적으로 저장/업데이트되었습니다.
+2025-08-20 16:42:57,155 - GHGERC_BUS_PROJECT - ERROR - --- STDERR ---
+Traceback (most recent call last):
+  File "C:\Users\USER\OneDrive - 주식회사후시파트너스\문서\Develope\GHGERC_BUS\01_insert_monthly_data.py", line 525, in <module>
+    main()
+    ~~~~^^
+  File "C:\Users\USER\OneDrive - 주식회사후시파트너스\문서\Develope\GHGERC_BUS\01_insert_monthly_data.py", line 520, in main
+    insert_monthly_data_with_copy(conn, monthly_records_df)
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+NameError: name 'insert_monthly_data_with_copy' is not defined
+2025-08-20 16:42:57,156 - GHGERC_BUS_PROJECT - CRITICAL - Pipeline stopped due to an error in '01_insert_monthly_data.py'.

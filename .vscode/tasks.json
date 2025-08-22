@@ -1,0 +1,12 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"type": "cmake",
+			"label": "CMake: 구성",
+			"command": "configure",
+			"problemMatcher": [],
+			"detail": "CMake 템플릿 구성 작업"
+		}
+	]
+}
